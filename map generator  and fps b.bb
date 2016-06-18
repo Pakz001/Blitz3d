@@ -43,7 +43,6 @@ makeents
 Global timer=CreateTimer(10)
 
 
-placeplayer
 
 ;
 ;
@@ -57,10 +56,13 @@ placeplayer
 
 ;Collisions type_camera,type_scenery,2,3
 
+placeplayer
+
+
 While KeyDown(1) = False
 	WaitTimer timer	
 	If KeyHit(2)=True
-		;placeplayer
+		placeplayer
 		remakelevel
 	End If
 	UpdateWorld
@@ -121,6 +123,7 @@ Function makeents()
 			ScaleEntity entmap(x,y,0),scale1,1,scale1
 			PositionEntity entmap(x,y,0),x*scale2,0,y*scale2
 			EntityColor entmap(x,y,0),55,100,0
+			EntityType entmap(x,y,0),type_scenery
 
 			entmap(x,y,1) = CreateCube()
 			ScaleEntity entmap(x,y,1),scale1,1,scale1

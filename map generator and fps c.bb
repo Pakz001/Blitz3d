@@ -40,29 +40,19 @@ SeedRnd MilliSecs()
 Dim entmap(mw,mh,2)
 ;makeents
 
-Global timer=CreateTimer(10)
-
-
-
-;
-;
-;
-; Here are the collisions
-;
-;
-;
-;
-;
+Global timer=CreateTimer(60)
 
 
 remakelevel()
-Collisions type_camera,type_scenery,2,3
+
 
 
 While KeyDown(1) = False
 	WaitTimer timer	
 	If KeyHit(2)=True
 		remakelevel
+		placeplayer
+
 	End If
 	UpdateWorld
 	RenderWorld
@@ -84,7 +74,7 @@ Function remakelevel()
 	Next
 	makemap()
 	makeents
-	placeplayer
+	Collisions type_camera,type_scenery,2,3
 
 End Function
 
@@ -315,19 +305,20 @@ Function gameinput()
 	dest_cam_x=0 : dest_cam_z=0
 	
 ;	; Gravity
-	TranslateEntity camera,0,-1,0
+	;TranslateEntity camera,0,-1,0
 
 
 End Function
 
 Function placeplayer()
 	Local exitloop = False
+	Local cnt2=0
 	While exitloop = False
 		x = Rand(0,mw)
 		y = Rand(0,mh)
 		cnt=0
-		For y1=-4 To 4
-		For x1=-4 To 4
+		For y1=-2 To 2
+		For x1=-2 To 2
 		If x+x1>0 And x+x1<mw And y+y1>0 And y+y1<mh
 		If map(x+x1,y+y1) = 1 
 			cnt=cnt+1
@@ -335,12 +326,13 @@ Function placeplayer()
 		End If
 		Next
 		Next
-		If cnt>31
+		If cnt>16
 			exitloop = True
 		End If
+		cnt2=cnt2+1
+		If cnt2>10000 Then remakelevel : cnt2=0
 	Wend
-	PositionEntity camera,EntityX(entmap(x,y,0)),EntityY(entmap(x,y,0))+15,EntityZ(entmap(x,y,0))
+	PositionEntity camera,x*scale2,5,y*scale2
 
 End Function
-
 

@@ -30,22 +30,42 @@ Global dest_cam_x#,dest_cam_z#,dest_cam_pitch#,dest_cam_yaw#	; Destination
 
 ; Set up camera
 Global camera=CreateCamera()					
-CameraRange camera,1,600
+CameraRange camera,1,300
 EntityRadius camera,1.5
 EntityType camera,type_camera
 
 SeedRnd MilliSecs()
 
-;makemap
 Dim entmap(mw,mh,2)
-;makeents
 
-Global timer=CreateTimer(60)
+Global timer=CreateTimer(30)
+
+;make the textures
+Global texw = 256
+Global texh = 256
+Dim tex(10)
+For ii=0 To 10
+tex(ii) = CreateTexture(texw,texh)
+SetBuffer TextureBuffer(tex(ii))
+ClsColor 200,200,200
+Cls
+num=1000
+If ii=2 Then num=3000
+For i=0 To num
+x = Rand(0,texw)
+y = Rand(0,texh)
+c = Rand(255)
+Color c,c,c
+Oval x,y,Rand(1,5),Rand(1,5)
+Next
+Next
+SetBuffer BackBuffer()
+
+
 
 
 remakelevel()
 placeplayer
-
 
 While KeyDown(1) = False
 	WaitTimer timer	
@@ -92,12 +112,14 @@ Function makeents()
 			PositionEntity entmap(x,y,0),x*scale2,0,y*scale2
 			EntityColor entmap(x,y,0),155,100,0
 			EntityType entmap(x,y,0),type_scenery
+			EntityTexture entmap(x,y,0),tex(0)
 			
 			entmap(x,y,1) = CreateCube()
 			ScaleEntity entmap(x,y,1),scale1,1,scale1
 			PositionEntity entmap(x,y,1),x*scale2,scale3,y*scale2
 			EntityColor entmap(x,y,1),155,100,0
 			EntityType entmap(x,y,1),type_scenery
+			EntityTexture entmap(x,y,1),tex(1)
 
 		End If
 		If map(x,y) = 2
@@ -106,6 +128,7 @@ Function makeents()
 			PositionEntity entmap(x,y,0),x*scale2,0,y*scale2
 			EntityColor entmap(x,y,0),255,100,0
 			EntityType entmap(x,y,0),type_scenery
+			EntityTexture entmap(x,y,0),tex(2)
 			
 		End If
 		If map(x,y) = 3
@@ -114,12 +137,15 @@ Function makeents()
 			PositionEntity entmap(x,y,0),x*scale2,0,y*scale2
 			EntityColor entmap(x,y,0),55,100,0
 			EntityType entmap(x,y,0),type_scenery
+			EntityTexture entmap(x,y,0),tex(3)
+
 
 			entmap(x,y,1) = CreateCube()
 			ScaleEntity entmap(x,y,1),scale1,1,scale1
 			PositionEntity entmap(x,y,1),x*scale2,scale3,y*scale2
 			EntityColor entmap(x,y,1),55,100,0
 			EntityType entmap(x,y,1),type_scenery
+			EntityTexture entmap(x,y,1),tex(4)
 
 		End If
 		If map(x,y) = 4 ; lava
@@ -128,12 +154,14 @@ Function makeents()
 			PositionEntity entmap(x,y,0),x*scale2,0,y*scale2
 			EntityColor entmap(x,y,0),155,10,1
 			EntityType entmap(x,y,0),type_scenery
-			
+			EntityTexture entmap(x,y,0),tex(5)
+
 			entmap(x,y,1) = CreateCube()
 			ScaleEntity entmap(x,y,1),scale1,1,scale1
 			PositionEntity entmap(x,y,1),x*scale2,scale3,y*scale2
 			EntityColor entmap(x,y,1),155,100,0
 			EntityType entmap(x,y,1),type_scenery
+			EntityTexture entmap(x,y,1),tex(1)
 
 		End If
 		
@@ -305,7 +333,7 @@ Function gameinput()
 	dest_cam_x=0 : dest_cam_z=0
 	
 ;	; Gravity
-	;TranslateEntity camera,0,-1,0
+	TranslateEntity camera,0,-1,0
 
 
 End Function

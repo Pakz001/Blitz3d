@@ -36,13 +36,13 @@ EntityType camera,type_camera
 
 SeedRnd MilliSecs()
 
-makemap
+
 Dim entmap(mw,mh,2)
-makeents
 
 Global timer=CreateTimer(10)
 
 
+remakelevel
 placeplayer
 
 ;
@@ -59,9 +59,9 @@ placeplayer
 
 While KeyDown(1) = False
 	WaitTimer timer	
-	If KeyHit(2)=True
-		;placeplayer
+	If KeyHit(2)=True		
 		remakelevel
+		placeplayer
 	End If
 	UpdateWorld
 	RenderWorld
@@ -289,6 +289,6 @@ Function placeplayer()
 		If map(x,y) = 1 Then exitloop = True
 	Wend
 	PositionEntity camera,x*scale2,2.5,y*scale2
+	ResetEntity camera
 End Function
-
 

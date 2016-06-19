@@ -338,7 +338,7 @@ Function gameinput()
 	dest_cam_x=0 : dest_cam_z=0
 	
 ;	; Gravity
-	TranslateEntity camera,0,-.1,0
+	TranslateEntity camera,0,-1,0
 
 
 End Function

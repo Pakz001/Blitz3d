@@ -83,7 +83,10 @@ While KeyDown(1) = False
 	Text 0,0,"Press 1 - new level - mouse to turn - rmb/cursors move."
 	DrawBlock minmap,width-200,0
 	Color 255,255,0
-	Rect (width-200+EntityX(camera)/scale1)-5,(EntityZ(camera)/scale1)-5,10,10,False
+
+	px = EntityX(camera)/scale1
+	py = EntityZ(camera)/scale1
+	Rect (width-200+(200-px)-5),(200-py)-5,10,10,False
 	Flip
 Wend
 End
@@ -386,7 +389,7 @@ Function makeminimap()
 			Color 50,50,50
 		End If
 		
-		Plot x*200/mw,y*200/mh
+		Plot 200-(x*200/mw),200-(y*200/mh)
 		End If
 	Next
 	Next

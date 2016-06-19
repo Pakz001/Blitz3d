@@ -66,7 +66,7 @@ SetBuffer BackBuffer()
 
 remakelevel()
 placeplayer
-
+Color 255,255,255
 While KeyDown(1) = False
 	WaitTimer timer	
 	If KeyHit(2)=True
@@ -77,7 +77,7 @@ While KeyDown(1) = False
 	UpdateWorld
 	RenderWorld
 	gameinput
-	Text 0,0,"Press 1 to create new level"
+	Text 0,0,"Press 1 - new level - mouse to turn - rmb/cursors move."
 	Flip
 Wend
 End

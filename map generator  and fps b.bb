@@ -36,26 +36,14 @@ EntityType camera,type_camera
 
 SeedRnd MilliSecs()
 
-makemap
 Dim entmap(mw,mh,2)
-makeents
 
 Global timer=CreateTimer(10)
 
 
+Collisions type_camera,type_scenery,2,3
 
-;
-;
-;
-; Here are the collisions
-;
-;
-;
-;
-;
-
-;Collisions type_camera,type_scenery,2,3
-
+remakelevel
 placeplayer
 
 
@@ -328,6 +316,5 @@ Function placeplayer()
 		If map(x,y) = 1 Then exitloop = True
 	Wend
 	PositionEntity camera,x*scale2,2.5,y*scale2
+	ResetEntity camera
 End Function
-
-

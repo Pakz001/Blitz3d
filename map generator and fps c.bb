@@ -44,7 +44,7 @@ Global timer=CreateTimer(60)
 
 
 remakelevel()
-
+placeplayer
 
 
 While KeyDown(1) = False
@@ -333,6 +333,5 @@ Function placeplayer()
 		If cnt2>10000 Then remakelevel : cnt2=0
 	Wend
 	PositionEntity camera,x*scale2,5,y*scale2
-
+	ResetEntity camera
 End Function
-

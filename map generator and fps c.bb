@@ -62,10 +62,12 @@ Next
 SetBuffer BackBuffer()
 
 
-
-
 remakelevel()
 placeplayer
+
+Global minmap = CreateImage(200,200)
+makeminimap
+
 Color 255,255,255
 While KeyDown(1) = False
 	WaitTimer timer	
@@ -78,6 +80,10 @@ While KeyDown(1) = False
 	RenderWorld
 	gameinput
 	Text 0,0,"Press 1 - new level - mouse to turn - rmb/cursors move."
+	DrawBlock minmap,width-200,0
+	Color 255,255,0
+	DebugLog EntityX(camera)
+	Rect (width-200+EntityX(camera)/scale1)-5,(EntityZ(camera)/scale1)-5,10,10,False
 	Flip
 Wend
 End
@@ -362,4 +368,28 @@ Function placeplayer()
 	Wend
 	PositionEntity camera,x*scale2,5,y*scale2
 	ResetEntity camera
+End Function
+
+Function makeminimap()
+	SetBuffer ImageBuffer(minmap)
+	ClsColor 0,0,0
+	Cls
+	For y=0 To mh
+	For x=0 To mw
+		If map(x,y)>0
+		If map(x,y) = 1
+			Color 150,150,150
+		End If
+		If map(x,y) = 2
+			Color 250,250,250
+		End If
+		If map(x,y) = 3
+			Color 50,50,50
+		End If
+		
+		Plot x*200/mw,y*200/mh
+		End If
+	Next
+	Next
+	SetBuffer BackBuffer()
 End Function

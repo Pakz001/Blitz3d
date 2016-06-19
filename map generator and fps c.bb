@@ -73,6 +73,7 @@ While KeyDown(1) = False
 	WaitTimer timer	
 	If KeyHit(2)=True
 		remakelevel
+		makeminimap		
 		placeplayer
 
 	End If
@@ -82,7 +83,6 @@ While KeyDown(1) = False
 	Text 0,0,"Press 1 - new level - mouse to turn - rmb/cursors move."
 	DrawBlock minmap,width-200,0
 	Color 255,255,0
-	DebugLog EntityX(camera)
 	Rect (width-200+EntityX(camera)/scale1)-5,(EntityZ(camera)/scale1)-5,10,10,False
 	Flip
 Wend
@@ -101,7 +101,6 @@ Function remakelevel()
 	makemap()
 	makeents
 	Collisions type_camera,type_scenery,2,3
-
 End Function
 
 ;
@@ -339,7 +338,7 @@ Function gameinput()
 	dest_cam_x=0 : dest_cam_z=0
 	
 ;	; Gravity
-	TranslateEntity camera,0,-1,0
+	TranslateEntity camera,0,-.1,0
 
 
 End Function
@@ -351,8 +350,8 @@ Function placeplayer()
 		x = Rand(0,mw)
 		y = Rand(0,mh)
 		cnt=0
-		For y1=-2 To 2
-		For x1=-2 To 2
+		For y1=-3 To 3
+		For x1=-3 To 3
 		If x+x1>0 And x+x1<mw And y+y1>0 And y+y1<mh
 		If map(x+x1,y+y1) = 1 
 			cnt=cnt+1
@@ -360,13 +359,13 @@ Function placeplayer()
 		End If
 		Next
 		Next
-		If cnt>16
+		If cnt>48
 			exitloop = True
 		End If
 		cnt2=cnt2+1
 		If cnt2>10000 Then remakelevel : cnt2=0
 	Wend
-	PositionEntity camera,x*scale2,5,y*scale2
+	PositionEntity camera,x*scale2,8,y*scale2
 	ResetEntity camera
 End Function
 

@@ -9,30 +9,33 @@ SetBuffer BackBuffer()
 
 AppTitle "Map generator"
 
-; mapwidthheight
+; mapwidthheight --- needs a beefy pc for large sizes
 Global mw=100
 Global mh=100
-;tilewidthheight
+;tilewidthheight --- for the minimap
 Global tw=GraphicsWidth()/mw
 Global th=GraphicsHeight()/mh
-;min/maxroomsizewh
+;min/maxroomsizewh - - generator variables
 Global minroomsize = 5
 Global maxroomsize = 15
 
 Dim map(mw,mh)
-
+; collisions
 Const type_scenery=3
-Const type_camera=1
+Const type_cam=1
 
-; Camera position, angle values
-Global cam_x#,cam_z#,cam_pitch#,cam_yaw#						; Current
-Global dest_cam_x#,dest_cam_z#,dest_cam_pitch#,dest_cam_yaw#	; Destination
+Global alt = 0
 
-; Set up camera
-Global camera=CreateCamera()					
-CameraRange camera,1,300
-EntityRadius camera,1.5
-EntityType camera,type_camera
+Global cam=CreateCamera()
+EntityRadius cam,1.5
+EntityType cam,type_cam
+
+CameraClsColor cam,71,71,71
+
+Global mousespeed#=0.5
+Global camspeed#=0.5
+Global camsmoothness#=3
+
 
 SeedRnd MilliSecs()
 
@@ -84,8 +87,8 @@ While KeyDown(1) = False
 	DrawBlock minmap,width-200,0
 	Color 255,255,0
 
-	px = EntityX(camera)/scale1
-	py = EntityZ(camera)/scale1
+	px = EntityX(cam)/(mw/20)
+	py = EntityZ(cam)/(mh/20)
 	Rect (width-200+(200-px)-5),(200-py)-5,10,10,False
 	Flip
 Wend
@@ -103,7 +106,7 @@ Function remakelevel()
 	Next
 	makemap()
 	makeents
-	Collisions type_camera,type_scenery,2,3
+	Collisions type_cam,type_scenery,2,3
 End Function
 
 ;
@@ -188,7 +191,7 @@ End Function
 
 Function makemap()
 	map(mw/2,mh/2) = 3
-	Local total=Rand(20000,150000)
+	Local total=(mw*mh)*30; Rand(20000,150000)
 	For i=0 To total
 		x = Rand(maxroomsize+2,mw-(maxroomsize+2))
 		y = Rand(maxroomsize+2,mh-(maxroomsize+2))
@@ -295,54 +298,28 @@ Function fits(x,y,w,h)
 End Function
 
 Function gameinput()
-
-
-	; Mouse look
-	; ----------
-
-	; Mouse x and y speed
-	mxs=MouseXSpeed()
-	mys=MouseYSpeed()
+	;cam controls
+	mx#=CurveValue(MouseXSpeed()*mousespeed,mx,camsmoothness)
+	my#=CurveValue(MouseYSpeed()*mousespeed,my,camsmoothness)
+	MoveMouse GraphicsWidth()/2,GraphicsHeight()/2
+	pitch#=EntityPitch(cam)
+	yaw#=EntityYaw(cam)
+	pitch=pitch+my
+	yaw=yaw-mx
+	If pitch>89 pitch=89
+	If pitch<-89 pitch=-89
+	RotateEntity cam,0,yaw,0
+	TurnEntity cam,pitch,0,0
 	
-	; Mouse shake (total mouse movement)
-	mouse_shake=Abs(((mxs+mys)/2)/1000.0)
+	cx#=(KeyDown(32)-KeyDown(30))*camspeed
+	cz#=(KeyDown(17)-KeyDown(31))*camspeed
+	If MouseDown(2) = True Then cz=camspeed
 
-	; Destination camera angle x and y values
-	dest_cam_yaw#=dest_cam_yaw#-mxs
-	dest_cam_pitch#=dest_cam_pitch#+mys
+	; Gravity
+	TranslateEntity cam,0,-1,0
+	MoveEntity cam,cx,0,cz
 
-	; Current camera angle x and y values
-	cam_yaw=cam_yaw+((dest_cam_yaw-cam_yaw)/5)
-	cam_pitch=cam_pitch+((dest_cam_pitch-cam_pitch)/5)
-	
-	RotateEntity camera,cam_pitch#,cam_yaw#,0
-	
-	; Rest mouse position to centre of screen
-	MoveMouse width/2,height/2
-	
-
-	; Camera move
-	; -----------
-	
-	; Forward/backwards - destination camera move z values
-	If KeyDown(200)=True Or MouseDown(2)=True Then dest_cam_z=1
-	If KeyDown(208)=True Then dest_cam_z#=-1
-
-	; Strafe - destination camera move x values
-	If KeyDown(205)=True Then dest_cam_x=1
-	If KeyDown(203)=True Then dest_cam_x=-1
-	
-	; Current camera move x and z values
-	cam_z=cam_z+((dest_cam_z-cam_z)/5)
-	cam_x=cam_x+((dest_cam_x-cam_x)/5)
-
-	; Move camera
-	MoveEntity camera,cam_x,0,cam_z
-	dest_cam_x=0 : dest_cam_z=0
-	
-;	; Gravity
-	TranslateEntity camera,0,-1,0
-
+Return
 
 End Function
 
@@ -368,8 +345,8 @@ Function placeplayer()
 		cnt2=cnt2+1
 		If cnt2>10000 Then remakelevel : cnt2=0
 	Wend
-	PositionEntity camera,x*scale2,8,y*scale2
-	ResetEntity camera
+	PositionEntity cam,x*scale2,8,y*scale2
+	ResetEntity cam
 End Function
 
 Function makeminimap()
@@ -394,4 +371,10 @@ Function makeminimap()
 	Next
 	Next
 	SetBuffer BackBuffer()
+End Function
+
+Function CurveValue#(newvalue#,oldvalue#,increments )
+If increments>1 oldvalue#=oldvalue#-(oldvalue#-newvalue#)/increments
+If increments<=1 oldvalue=newvalue
+Return oldvalue#
 End Function

@@ -1,0 +1,11 @@
+Welcome to Blue - Hosted on www.blizcoder.com showcase
+
+A texteditor made from the ground up
+
+run the tool with the commandline pointer at a file to open things.
+
+save not implemented
+
+www.hardcorecoder.com
+
+

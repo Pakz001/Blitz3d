@@ -1,3 +1,5 @@
+Sorry needs to be under Blitz Plus!!! see itch.oo or llm convertions
+
 Blue (c) 2004 by R.v.Etten
 
 This code may be used in freeware and open source tools only.
